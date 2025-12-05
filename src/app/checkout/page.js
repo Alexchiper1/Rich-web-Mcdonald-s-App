@@ -83,46 +83,46 @@ export default function CartPage() {
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 1,mx: "auto", maxWidth: 420, p: 1.5 }}>
 
-        {detailedCart.map((item, index) => (
-          <Box
-            key={index}
-            sx={{
-              border: '2px solid #000',
-              borderRadius: 2,
-              p: 2,
-              mt: 2,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: "center"
-            }}
-          >
-            <span>{item.name} — €{item.price}</span>
-            <Button 
-              variant="outlined" 
-              color="error"
-              onClick={() => removeItem(index)}
+          {detailedCart.map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                border: '1.5px solid #000',
+                borderRadius: 1.5,
+                p: 0.4,
+                mt: 1,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: "center"
+              }}
             >
-              Remove
-            </Button>
+              <span>{item.name} — €{item.price}</span>
+              <Button 
+                variant="outlined" 
+                color="error"
+                size='small'
+                onClick={() => removeItem(index)}
+              >
+                Remove
+              </Button>
+            </Box>
+          ))}
+
+          <Box sx={{ mt: 2, fontSize: 19, fontWeight: "bold", textAlign: "right"}}>
+            Total: €{total.toFixed(2)}
           </Box>
-        ))}
 
-        <Box sx={{ mt: 3, fontSize: 22, fontWeight: "bold" }}>
-          Total: €{total.toFixed(2)}
+          <Button
+            variant="contained"
+            sx={{mt: 1.5}}
+            onClick={placeOrder}
+          >
+            Checkout
+          </Button>
+
         </Box>
-
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3 }}
-          onClick={placeOrder}
-        >
-          Checkout
-        </Button>
-
-      </Box>
 
     </Box>
   );
