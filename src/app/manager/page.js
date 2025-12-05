@@ -6,6 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Link from 'next/link';
 
 export default function ManagerPage() {
 
@@ -29,6 +30,13 @@ export default function ManagerPage() {
 
       <AppBar position="static">
         <Toolbar>
+
+          <Link href="/dashboard" style={{color: "white", textDecoration: "none"}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button color="inherit" size="small">Menu</Button>
+            </Box>
+          </Link>
+
           <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
             Manager Dashboard
           </Typography>

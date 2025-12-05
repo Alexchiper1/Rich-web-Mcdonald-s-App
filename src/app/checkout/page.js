@@ -70,7 +70,7 @@ export default function CartPage() {
       <AppBar position="static">
         <Toolbar>
 
-          <Link href="/dashboard">
+          <Link href="/dashboard" style={{color: "white", textDecoration: "none"}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Button color="inherit" size="small">MENU</Button>
             </Box>

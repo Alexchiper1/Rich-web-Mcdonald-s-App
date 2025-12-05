@@ -42,15 +42,17 @@ export default function DashboardPage() {
       <AppBar position="static">
         <Toolbar>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button color="inherit" size="small">MY ACCOUNT</Button>
-          </Box>
+          <Link href="/manager" style={{color: "white", textDecoration: "none"}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button color="inherit" size="small">Manager Dashboard</Button>
+            </Box>
+          </Link>
 
           <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
             <Typography variant="h6" component="div">McDonald's</Typography>
           </Box>
 
-          <Link href="/checkout">
+          <Link href="/checkout" style={{color: "white", textDecoration: "none"}}>
             <Box>
               <IconButton color="inherit" aria-label="cart">
                 <ShoppingCartIcon />
