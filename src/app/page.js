@@ -67,23 +67,25 @@ async function runDBCallAsync(url) {
 
  
 
-    if(data.data== "valid"){
+    if (data.valid === true) {
 
-      console.log("login is valid!")
+        console.log("login is valid!");
 
+        if (data.role === "customer") {
+          window.location.href = "/dashboard";
+        }
 
-     
+        if (data.role === "manager") {
+          window.location.href = "/manager";
+        }
 
-    } else {
+      } else {
 
+        console.log("not valid");
+        alert("Invalid login details");
 
-      console.log("not valid  ")
-
+      }
     }
-
-  }
-
-
 
 
   return (

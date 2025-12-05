@@ -2,14 +2,13 @@ import { MongoClient } from "mongodb";
 
 export async function GET(req) {
   try {
-    console.log("LOGIN API HIT");
+    console.log("Register api");
 
     const { searchParams } = new URL(req.url);
     const email = searchParams.get("email");
     const pass = searchParams.get("pass");
-
-    console.log("Email:", email);
-    console.log("Pass:", pass);
+    const address = searchParams.get("address");
+    const telephone = searchParams.get("telephone");
 
     // CORRECT CONNECTION STRING
     const uri = "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/app?retryWrites=true&w=majority&appName=Cluster0";
@@ -20,34 +19,35 @@ export async function GET(req) {
     const db = client.db("app");
     const users = db.collection("Users");
 
-    // LOOK FOR username (not email)
-    const user = await users.findOne({ username: email });
+    // find if email already exists
+    const userExist = await users.findOne({ email: email });
 
-    console.log("User found:", user);
-
-    let valid = false;
-    let role = "";
-
-    if (user && user.pass === pass) {
-      valid = true;
-      role = user.acctype;
+    if(userExist){
+      console.log("Email already in use");
+      return Response.json({
+        data: "email_exists"
+      });
     }
 
-    console.log("VALID:", valid);
+    await users.insertOne({
+          email: email,
+          pass: pass,
+          address: address,
+          telephone: telephone,
+          acctype: "customer"
+        });
 
-    return Response.json({
-      valid,
-      role
-    });
+        console.log("User inserted successfully");
 
-  } catch (err) {
-    console.log("LOGIN API ERROR:", err);
+        return Response.json({
+          data: "inserted"
+        });
 
-    // PREVENT EMPTY JSON ERROR
-    return Response.json({
-      valid: false,
-      role: "",
-      error: "login_failed"
-    });
-  }
-}
+      } catch (err) {
+        console.log("REGISTER API ERROR:", err);
+
+        return Response.json({
+          data: "error"
+        });
+      }
+    }

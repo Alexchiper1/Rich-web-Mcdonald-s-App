@@ -80,7 +80,7 @@ async function runDBCallAsync(url) {
       console.log("REGISTER SUCCESS!");
 
       // redirect to login after successful register
-      window.location.href = "/login";
+      window.location.href = "../";
 
     } else if (data.data === "email_exists") {
 
@@ -139,7 +139,7 @@ async function runDBCallAsync(url) {
 
       label="Password"
 
-      type="pass"
+      type="password"
 
       id="password"
 
@@ -196,7 +196,7 @@ async function runDBCallAsync(url) {
 
       id="secondEmail"
 
-      label="Second Email"
+      label="Confirm Email"
 
       name="secondEmail"
 
@@ -216,7 +216,9 @@ async function runDBCallAsync(url) {
 
       id="secondPass"
 
-      label="Second Password"
+      label="Confirm Password"
+      
+      type='password'
 
       name="secondPass"
 

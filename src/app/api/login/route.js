@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 
 export async function GET(req) {
-  console.log("in the api page");
 
   try {
     const { searchParams } = new URL(req.url);
@@ -22,7 +21,7 @@ export async function GET(req) {
     const db = client.db("app");
     const loginCollection = db.collection("Users");
 
-    const user = await loginCollection.findOne({ username: email });
+    const user = await loginCollection.findOne({ email: email });
 
     console.log("User found:", user);
 
