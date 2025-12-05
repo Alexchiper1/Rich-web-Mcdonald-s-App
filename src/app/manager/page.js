@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function ManagerPage() {
 
@@ -16,13 +17,24 @@ export default function ManagerPage() {
     totalItemsSold: 0
   });
 
+  const[graphData, setGraphData] = React.useState([]);
+
   React.useEffect(() => {
     async function loadStats() {
       const res = await fetch("/api/manager?action=stats");
       const data = await res.json();
       setStats(data);
     }
+
+    async function loadGraph(){
+      const res = await fetch("/api/manager?action=salesGraph");
+      const data = await res.json();
+      setGraphData(data);
+      console.log("GRAPH DATA:", data);
+
+    }
     loadStats();
+    loadGraph();
   }, []);
 
   return (
@@ -89,6 +101,35 @@ export default function ManagerPage() {
         }}>
           Orders: {stats.totalOrders}
         </Box>
+      </Box>
+      {/*Graph */}
+      <Box sx={{
+        m: 3,
+        p: 3,
+        border: '2px solid black',
+        borderRadius: 3
+      }}>
+
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Total Sales Count
+        </Typography>
+
+        <BarChart
+          xAxis={[
+            {
+              data: Array.isArray(graphData) ? graphData.map(item => item.label) : [],
+              scaleType: 'band',
+            },
+          ]}
+          series={[
+            {
+              data: Array.isArray(graphData) ? graphData.map(item => item.totalOrders) : [],
+              label: 'Total Orders',
+            },
+          ]}
+          height={300}
+        />
+
       </Box>
     </Box>
   );

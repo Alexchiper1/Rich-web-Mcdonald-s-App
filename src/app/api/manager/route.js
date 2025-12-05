@@ -37,6 +37,30 @@ export async function GET(req) {
       return Response.json({ data: orders });
     }
 
+    //Graph code
+      if (action === "salesGraph") {
+
+      const orders = await db.collection("Orders").find({}).toArray();
+      const counts = {};
+
+      for (let order of orders) {
+        const date = new Date(order.date || order.createdAt || Date.now());
+        const label = date.toLocaleDateString("en-IE", { weekday: "short" });
+
+        if (!counts[label]) {
+          counts[label] = 0;
+        }
+        counts[label]++;
+      }
+
+      const graphData = Object.keys(counts).map(day => ({
+        label: day,
+        totalOrders: counts[day]
+      }));
+
+      return Response.json(graphData);
+    }
+
     return Response.json({ error: "Invalid action" });
 
   } catch (err) {
