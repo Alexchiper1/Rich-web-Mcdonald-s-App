@@ -15,7 +15,7 @@ export default function CartPage() {
 
   React.useEffect(() => {
     async function load() {
-      // Get cart items from server
+      // get the cart items
       const cartRes = await fetch("/api/getCart");
       const cartJson = await cartRes.json();
       setCartItems(cartJson.cart);
@@ -36,7 +36,7 @@ export default function CartPage() {
     };
   });
 
-  // Remove item
+  // Remove item from the list
   async function removeItem(index) {
     await fetch(`/api/cart?remove=${index}`);
     const res = await fetch("/api/getCart");
@@ -44,12 +44,12 @@ export default function CartPage() {
     setCartItems(data.cart);
   }
 
-  // Calculate total
+  // calculates the total
   const total = detailedCart.reduce((sum, item) => {
     return sum + (item.price || 0);
   }, 0);
 
-  // Place order
+  // places order
   async function placeOrder() {
     const email = "customer@test.com";
 

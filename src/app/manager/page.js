@@ -103,11 +103,7 @@ export default function ManagerPage() {
         </Box>
       </Box>
       {/*Graph */}
-      <Box sx={{
-        m: 3,
-        p: 3,
-        border: '2px solid black',
-        borderRadius: 3
+      <Box sx={{m: 3, p: 3, border: '2px solid black', borderRadius: 3
       }}>
 
         <Typography variant="h6" sx={{ mb: 2 }}>
