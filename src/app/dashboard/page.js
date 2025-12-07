@@ -13,11 +13,14 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
+import { flex } from '@mui/system';
 
 export default function DashboardPage() {
 
   // STATE FOR REAL PRODUCTS
   const [products, setProducts] = React.useState([]);
+
+  const[weather, setWeather] = React.useState(null);
 
   // LOAD PRODUCTS FROM API
   React.useEffect(() => {
@@ -27,6 +30,16 @@ export default function DashboardPage() {
       setProducts(data);
     }
     loadProducts();
+  }, []);
+
+  //get the weather api
+  React.useEffect(() => {
+    async function loadWeather(){
+      const res = await fetch("https://api.weatherapi.com/v1/current.json?key=e98894c8719d4c79bbd133512250712&q=Dublin&aqi=no");
+      const data = await res.json();
+      setWeather(data);
+    }
+  loadWeather();
   }, []);
 
   function putInCart(pname) {
@@ -51,6 +64,19 @@ export default function DashboardPage() {
           <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
             <Typography variant="h6" component="div">McDonald's</Typography>
           </Box>
+
+          {/* Weather in the nav bar */}
+          {weather && weather.current && (
+            <Box sx={{alignItems: 'center', mr: 2, display: 'flex' }}>
+              <Typography variant="body2" sx={{ mr: 1 }}>
+                {weather.location.name}
+              </Typography>
+
+              <Typography variant="body2">
+                {Math.round(weather.current.temp_c)}°C
+              </Typography>
+            </Box>
+          )}
 
           <Link href="/checkout" style={{color: "white", textDecoration: "none"}}>
             <Box>
