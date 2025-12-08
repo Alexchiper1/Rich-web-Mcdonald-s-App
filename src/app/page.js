@@ -92,10 +92,10 @@ async function runDBCallAsync(url) {
 
     <Container maxWidth="sm">
 
-    <Box sx={{ height: '100vh' }} >
+    <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center'}} >
 
 
-    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1}}>
 
     <TextField
 
@@ -127,7 +127,7 @@ async function runDBCallAsync(url) {
 
       name="pass"
 
-      label="Pass"
+      label="Password"
 
       type="pass"
 
@@ -160,6 +160,12 @@ async function runDBCallAsync(url) {
       Sign In
 
     </Button>
+
+    <Box sx={{ textAlign: 'center' }}>
+      <Link href="/newregister" variant="body2">
+        {"Don't have an account? Sign up"}
+      </Link>
+    </Box>
 
 </Box>
 
