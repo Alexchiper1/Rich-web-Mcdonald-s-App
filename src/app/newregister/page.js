@@ -246,8 +246,8 @@ async function runDBCallAsync(url) {
             Register
           </Button>
 
-          <Link href="/login">Already have an account? Login</Link>
-</Box>
+          <Link href="../">Already have an account? Login</Link>
+    </Box>
 
 </Box>
 

@@ -1,50 +1,31 @@
 import { MongoClient } from "mongodb";
 
-export async function GET(req) {
-
+export async function POST(req) {
   try {
-    const { searchParams } = new URL(req.url);
-    const email = searchParams.get("email");
-    const pass = searchParams.get("pass");
+    const { email, pass } = await req.json();
 
-    console.log("Email:", email);
-    console.log("Pass:", pass);
-
-    const uri =
-      "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/app?retryWrites=true&w=majority&appName=Cluster0";
-
+    const uri = "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/?appName=Cluster0";
     const client = new MongoClient(uri);
 
     await client.connect();
-    console.log("Connected to db");
+    console.log(" Connected to MongoDB");
 
     const db = client.db("app");
-    const loginCollection = db.collection("Users");
+    const users = db.collection("Users");
 
-    const user = await loginCollection.findOne({ email: email });
+    const user = await users.findOne({ username: email });
 
-    console.log("User found:", user);
-
-    let valid = false;
-    let role = "";
-
-    if (user && user.pass === pass) {
-      valid = true;
-      role = user.acctype;
+    if (!user || user.pass !== pass) {
+      return Response.json({ valid: false });
     }
 
     return Response.json({
-      valid: valid,
-      role: role
+      valid: true,
+      role: user.acctype
     });
 
   } catch (err) {
-    console.log("LOGIN API ERROR:", err);
-
-    return Response.json({
-      valid: false,
-      role: "",
-      error: "login_failed"
-    });
+    console.error("LOGIN API ERROR:", err);
+    return Response.json({ valid: false, error: "db_error" });
   }
 }
