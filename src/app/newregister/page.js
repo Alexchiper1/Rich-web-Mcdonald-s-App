@@ -32,17 +32,17 @@ export default function RegisterPage() {
 
 
 
-    let email = data.get('email')
+   const email = data.get('email')
 
-   let pass = data.get('pass')
+   const pass = data.get('pass')
 
-   let address = data.get('address')
+   const address = data.get('address')
 
-   let telephone = data.get('telephone')
+   const telephone = data.get('telephone')
 
-   let secondEmail = data.get('secondEmail')
+   const secondEmail = data.get('secondEmail')
 
-   let secondPass = data.get('secondPass')
+   const secondPass = data.get('secondPass')
 
    console.log("Sent email:" + email)
 
@@ -59,39 +59,25 @@ export default function RegisterPage() {
 
 
     runDBCallAsync(
-      `http://localhost:3000/api/newregister?email=${email}&pass=${pass}&address=${address}&telephone=${telephone}&secondEmail=${secondEmail}&secondPass=${secondPass}`
+      `/api/newregister?email=${email}&pass=${pass}&address=${address}&telephone=${telephone}`
     );
+  };
 
-  }; // end handle submit
 
-
-async function runDBCallAsync(url) {
-
-    console.log("CALLING DB: " + url);
-
+  async function runDBCallAsync(url) {
     const res = await fetch(url);
-
     const data = await res.json();
 
-    console.log("DB returned: ", data); 
-
     if (data.data === "inserted") {
-
-      console.log("REGISTER SUCCESS!");
-
-      // redirect to login after successful register
-      window.location.href = "../";
-
-    } else if (data.data === "email_exists") {
-
+      alert("Registration successful!");
+      window.location.href = "/";
+    } 
+    else if (data.data === "email_exists") {
       alert("Email already used");
-
-    } else {
-
-      console.log("REGISTER FAILED");
+    } 
+    else {
+      alert("Registration failed");
     }
-
-
   }
 
 

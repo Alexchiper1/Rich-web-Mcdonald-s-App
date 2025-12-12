@@ -20,6 +20,7 @@ export async function GET(req) {
 
     const existing = await users.findOne({ username: email });
 
+    //stop duplicate emails
     if (existing) {
       return Response.json({ data: "email_exists" });
     }
