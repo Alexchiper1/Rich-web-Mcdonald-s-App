@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# McDonald’s Menu Ordering App (Next.js + MongoDB + MUI)
 
-## Getting Started
+A full-stack web application built with **Next.js (App Router)** that supports **role-based login** (Customer vs Manager), a **menu browsing & cart flow**, and a **manager dashboard** for viewing sales stats and managing the menu.
 
-First, run the development server:
+> **Roles**
+> - **Customer:** Browse menu, add items to cart, checkout  
+> - **Manager:** View manager dashboard + manage menu (add/remove products)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Customer
+- Browse a dynamic product menu (pulled from MongoDB)
+- Add items to cart + view cart count badge
+- Remove items from cart + calculate total
+- Checkout creates an order in MongoDB
+- Logout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Manager
+- Manager-only dashboard
+- Sales stats: total orders, revenue, items sold
+- Sales graph (orders by day)
+- Menu management page: add/remove products
+- Logout
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend:** Next.js (App Router), React
+- **UI:** Material UI (MUI), MUI X Charts
+- **Backend:** Next.js API Routes (server functions)
+- **Database:** MongoDB Atlas
+- **Auth (demo-level):** Role stored client-side (sessionStorage)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Project Structure (important folders)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
