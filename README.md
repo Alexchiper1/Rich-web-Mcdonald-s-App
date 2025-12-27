@@ -1,40 +1,37 @@
-# McDonald’s Menu Ordering App (Next.js + MongoDB + MUI)
+# Rich Web Applications – Full-Stack Menu Ordering System
 
-A full-stack web application built with **Next.js (App Router)** that supports **role-based login** (Customer vs Manager), a **menu browsing & cart flow**, and a **manager dashboard** for viewing sales stats and managing the menu.
-
-> **Roles**
-> - **Customer:** Browse menu, add items to cart, checkout  
-> - **Manager:** View manager dashboard + manage menu (add/remove products)
+A full-stack web application developed as part of the **Rich Web Applications** module.  
+The system demonstrates modern web development practices using **Next.js**, **Material UI**, **Node.js**, and **MongoDB**, with role-based functionality for customers and managers.
 
 ---
 
-## Features
+## Overview
 
-### Customer
-- Browse a dynamic product menu (pulled from MongoDB)
-- Add items to cart + view cart count badge
-- Remove items from cart + calculate total
-- Checkout creates an order in MongoDB
-- Logout
+This application simulates a real-world online ordering platform with two user roles:
 
-### Manager
-- Manager-only dashboard
-- Sales stats: total orders, revenue, items sold
-- Sales graph (orders by day)
-- Menu management page: add/remove products
-- Logout
+### 👤 Customer
+- Browse a dynamic menu retrieved from MongoDB
+- Add and remove items from a shopping cart
+- View cart total and place orders
+- Logout functionality
 
----
+### 🛠️ Manager
+- Access a dedicated manager dashboard
+- View sales statistics (orders, revenue, items sold)
+- View sales trends using charts
+- Add new menu items
+- Remove existing menu items
+- Logout functionality
 
-## Tech Stack
-
-- **Frontend:** Next.js (App Router), React
-- **UI:** Material UI (MUI), MUI X Charts
-- **Backend:** Next.js API Routes (server functions)
-- **Database:** MongoDB Atlas
-- **Auth (demo-level):** Role stored client-side (sessionStorage)
+Role-based access ensures customers cannot access manager features.
 
 ---
 
-## Project Structure (important folders)
+## Technologies Used
 
+- **Next.js (App Router)** – Frontend and backend framework
+- **JavaScript** – Core application logic
+- **Node.js** – Server-side functionality
+- **Material UI (MUI)** – UI components and styling
+- **RESTful API Routes** – Data communication
+- **MongoDB Atlas** – Persistent data storage
