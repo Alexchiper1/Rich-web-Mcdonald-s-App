@@ -1,24 +1,37 @@
 import { MongoClient } from "mongodb";
+import { NextResponse } from "next/server";
 
 export async function GET() {
+  let client;
+
   try {
-    console.log("Products API called");
+    const uri =
+      process.env.MONGODB_URI ||
+      "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/?appName=Cluster0";
 
-    const uri = "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/?appName=Cluster0";
-    const client = new MongoClient(uri);
-
+    client = new MongoClient(uri);
     await client.connect();
-    console.log("Connected to MongoDB");
 
     const db = client.db("app");
-    const products = await db.collection("products").find({}).toArray();
 
-    console.log("Sending products:", products.length);
+    // try common collection names
+    const colNames = ["products", "Products", "product", "Product"];
+    let products = [];
 
-    return Response.json(products);
+    for (const name of colNames) {
+      const data = await db.collection(name).find({}).toArray();
+      if (data.length > 0) {
+        products = data;
+        console.log("Using collection:", name, "count:", data.length);
+        break;
+      }
+    }
 
+    return NextResponse.json(products);
   } catch (err) {
     console.log("PRODUCTS API ERROR:", err);
-    return Response.json([]);
+    return NextResponse.json([], { status: 500 });
+  } finally {
+    if (client) await client.close();
   }
 }

@@ -19,6 +19,7 @@ export async function GET(req, res) {
     const db = client.db("app");
 
     // ---------- PLACE ORDER ----------
+    //saves order to the db
     if (action === "place") {
 
       await db.collection("Orders").insertOne({

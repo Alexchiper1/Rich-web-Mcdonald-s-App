@@ -1,60 +1,66 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Link from 'next/link';
+import * as React from "react";
+import Link from "next/link";
+
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Divider,
+  Chip
+} from "@mui/material";
 
 export default function CartPage() {
-
   const [cartItems, setCartItems] = React.useState([]);
   const [productData, setProductData] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
+  // load cart + products
   React.useEffect(() => {
     async function load() {
-      // get the cart items
-      const cartRes = await fetch("/api/getCart");
-      const cartJson = await cartRes.json();
-      setCartItems(cartJson.cart);
+      setLoading(true);
 
-      // Get products from DB
-      const prodRes = await fetch("/api/products");
+      const cartRes = await fetch("/api/getCart", { cache: "no-store" });
+      const cartJson = await cartRes.json();
+      setCartItems(cartJson.cart || []);
+
+      const prodRes = await fetch("/api/products", { cache: "no-store" });
       const prodJson = await prodRes.json();
-      setProductData(prodJson);
+      setProductData(prodJson || []);
+
+      setLoading(false);
     }
     load();
   }, []);
 
-  // Create full detailed items
-  const detailedCart = cartItems.map((name, index) => {
-    return { 
-      id: index,
-      ...productData.find(p => p.name === name)
-    };
-  });
+  // build detailed cart
+  const detailedCart = cartItems
+    .map((name) => productData.find((p) => p.name === name))
+    .filter(Boolean);
 
-  // Remove item from the list
+  // remove item
   async function removeItem(index) {
     await fetch(`/api/cart?remove=${index}`);
-    const res = await fetch("/api/getCart");
+    const res = await fetch("/api/getCart", { cache: "no-store" });
     const data = await res.json();
-    setCartItems(data.cart);
+    setCartItems(data.cart || []);
   }
 
-  // calculates the total
-  const total = detailedCart.reduce((sum, item) => {
-    return sum + (item.price || 0);
-  }, 0);
+  // total
+  const total = detailedCart.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
-  // places order
+  // place order (demo)
   async function placeOrder() {
     const email = "customer@test.com";
 
     await fetch(
-      `/api/checkout?action=place&email=${email}&items=${JSON.stringify(cartItems)}&total=${total}`
+      `/api/checkout?action=place&email=${encodeURIComponent(email)}&items=${encodeURIComponent(
+        JSON.stringify(cartItems)
+      )}&total=${total}`
     );
 
     // clear cart after purchase
@@ -65,65 +71,101 @@ export default function CartPage() {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-
-      <AppBar position="static">
+    <Box sx={{ minHeight: "100vh" }}>
+      <AppBar position="sticky" sx={{ background: "linear-gradient(90deg, #DA291C, #b21c13)" }}>
         <Toolbar>
-
-          <Link href="/dashboard" style={{color: "white", textDecoration: "none"}}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button color="inherit" size="small">MENU</Button>
-            </Box>
+          <Link href="/dashboard" style={{ color: "white", textDecoration: "none" }}>
+            <Button color="inherit" size="small" sx={{ fontWeight: 900 }}>
+              Menu
+            </Button>
           </Link>
 
-          <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
-            <Typography variant="h6" component="div">McDonald's</Typography>
+          <Box sx={{ flexGrow: 1, textAlign: "center" }}>
+            <Typography variant="h6" sx={{ fontWeight: 900 }}>
+              Checkout
+            </Typography>
           </Box>
 
+          <Chip label={`${detailedCart.length} items`} color="secondary" sx={{ fontWeight: 900 }} />
         </Toolbar>
       </AppBar>
 
-        <Box sx={{ mt: 1,mx: "auto", maxWidth: 420, p: 1.5 }}>
+      <Box sx={{ p: 2, display: "grid", placeItems: "center" }}>
+        <Paper
+          elevation={10}
+          sx={{
+            width: "100%",
+            maxWidth: 520,
+            p: { xs: 2, sm: 3 },
+            border: "1px solid rgba(0,0,0,0.08)",
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 900, mb: 1 }}>
+            Your Cart
+          </Typography>
 
-          {detailedCart.map((item, index) => (
-            <Box
-              key={index}
-              sx={{
-                border: '1.5px solid #000',
-                borderRadius: 1.5,
-                p: 0.4,
-                mt: 1,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: "center"
-              }}
-            >
-              <span>{item.name} — €{item.price}</span>
-              <Button 
-                variant="outlined" 
-                color="error"
-                size='small'
-                onClick={() => removeItem(index)}
+          <Divider sx={{ mb: 2 }} />
+
+          {loading && <Typography>Loading...</Typography>}
+
+          {!loading && detailedCart.length === 0 && (
+            <Typography sx={{ opacity: 0.8 }}>Cart is empty.</Typography>
+          )}
+
+          {!loading &&
+            detailedCart.map((item, index) => (
+              <Box
+                key={index}
+                sx={{
+                  p: 1.2,
+                  mb: 1.2,
+                  borderRadius: 2,
+                  border: "1px solid rgba(0,0,0,0.12)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
-                Remove
-              </Button>
-            </Box>
-          ))}
+                <Box>
+                  <Typography sx={{ fontWeight: 900 }}>{item.name}</Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                    €{Number(item.price).toFixed(2)}
+                  </Typography>
+                </Box>
 
-          <Box sx={{ mt: 2, fontSize: 19, fontWeight: "bold", textAlign: "right"}}>
-            Total: €{total.toFixed(2)}
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  onClick={() => removeItem(index)}
+                  sx={{ fontWeight: 900 }}
+                >
+                  Remove
+                </Button>
+              </Box>
+            ))}
+
+          <Divider sx={{ my: 2 }} />
+
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Typography sx={{ fontWeight: 900, fontSize: 18 }}>Total</Typography>
+            <Typography sx={{ fontWeight: 900, fontSize: 18 }}>
+              €{total.toFixed(2)}
+            </Typography>
           </Box>
 
           <Button
+            fullWidth
             variant="contained"
-            sx={{mt: 1.5}}
+            color="secondary"
+            sx={{ mt: 2, py: 1.2, fontWeight: 900 }}
+            disabled={detailedCart.length === 0}
             onClick={placeOrder}
           >
-            Checkout
+            Place Order
           </Button>
-
-        </Box>
-
+        </Paper>
+      </Box>
     </Box>
   );
 }

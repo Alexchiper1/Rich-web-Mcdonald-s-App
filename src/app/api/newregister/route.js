@@ -1,30 +1,42 @@
 import { MongoClient } from "mongodb";
+import { NextResponse } from "next/server";
 
-export async function GET(req) {
+export async function POST(req) {
+  let client;
+
   try {
-    console.log("Register api");
+    // read json from frontend
+    const body = await req.json();
+    const email = body.email;
+    const pass = body.pass;
+    const address = body.address;
+    const telephone = body.telephone;
 
-    const { searchParams } = new URL(req.url);
-    const email = searchParams.get("email");
-    const pass = searchParams.get("pass");
-    const address = searchParams.get("address");
-    const telephone = searchParams.get("telephone");
+    // validate fields
+    if (!email || !pass || !address || !telephone) {
+      return NextResponse.json({ data: "missing_fields" }, { status: 400 });
+    }
 
-    const uri = "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/app?retryWrites=true&w=majority&appName=Cluster0";
+    // connect mongo
+    const uri =
+      process.env.MONGODB_URI ||
+      "mongodb+srv://b00161706:pass@cluster0.p7d3dvm.mongodb.net/?appName=Cluster0";
 
-    const client = new MongoClient(uri);
+    client = new MongoClient(uri);
     await client.connect();
 
+    // db + collection
     const db = client.db("app");
     const users = db.collection("Users");
 
+    // stop duplicate
     const existing = await users.findOne({ username: email });
 
-    //stop duplicate emails
     if (existing) {
-      return Response.json({ data: "email_exists" });
+      return NextResponse.json({ data: "email_exists" });
     }
 
+    // insert
     await users.insertOne({
       username: email,
       pass: pass,
@@ -33,10 +45,11 @@ export async function GET(req) {
       acctype: "customer"
     });
 
-    return Response.json({ data: "inserted" });
-
+    return NextResponse.json({ data: "inserted" });
   } catch (err) {
     console.error("REGISTER ERROR:", err);
-    return Response.json({ data: "error" });
+    return NextResponse.json({ data: "error" }, { status: 500 });
+  } finally {
+    if (client) await client.close();
   }
 }
